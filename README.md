@@ -1,5 +1,7 @@
 # Ohjelmistotekniikka, harjoitustyö
 
+Alustava idea on tehdä clipboard manager, joka tarjoaa leikepöytähistorian ja työkaluja sen hallinnoimiseen (saattaa muuttua, jos ilmenee sudenkuoppia...).
+
 ## Tehtävät
 
 ### Viikko 1
