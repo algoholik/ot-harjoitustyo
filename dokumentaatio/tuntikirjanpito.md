@@ -1,8 +1,8 @@
 # Työaikakirjanpito
 
-| PÄIVÄ | AIKA(h) | TEHTYÄ |
-| :----:| -------:| :-----|
+| Pvm   |  Tunnit | Tehtyä |
+| -----:| -------:| :-----|
 | 20.3. |       1 | tutustuminen tkinteriin |
 | 21.3. |       2 | käyttöliittymän alustava toteutus, todojen luominen |
 | 28.3. |       3 | käyttäjänhallinta, tallennus tiedostoon, rakenteen refaktorointi |
-| Yht.  |      12 | | 
+|  Yht. |      12 | | 
