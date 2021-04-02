@@ -1,4 +1,4 @@
-from db_init import db_init
+from database.db_init import db_init
 
 def build():
     db_init()
