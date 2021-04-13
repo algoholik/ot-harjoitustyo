@@ -9,8 +9,8 @@ __pycache__
 /src/entities/__pycache__/
 
 # data files
-/data/db-monoa.sqlite3
-/data/test-db-monoa.sqlite3
+/data/monoa-db.sqlite3
+/data/monoa-db-test.sqlite3
 
 # laskari-spesific
 /laskarit/viikko2/unicafe/.pytest_cache
