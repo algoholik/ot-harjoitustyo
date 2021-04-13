@@ -1,52 +1,57 @@
 import tkinter as tk
+from tkinter.constants import ACTIVE
 from services.monoa_service import m_service
 from entities.snippet import Snippet
 
 class UI:
     def __init__(self, root):
         self._root = root
-        self.snippets = [snippet for snippet in m_service.get_snippets()]
-        #for snip in self.snippets:
-        #    print(snip)
+        self._root.columnconfigure(0, weight=1)
+        self._root.rowconfigure(0, weight=1)
+
+        self.active_snippet_id = tk.IntVar()
+        self.active_snippet_txt = tk.StringVar()
         #self._current_view = None
 
+
     def start(self):
-
-        active_snippet_id = tk.IntVar()
-
-        def _get_snippets():
-            self.snippets = [snippet for snippet in m_service.get_snippets()]
-
         def _update_snippet():
-            m_service.update_snippet(active_snippet_id.get(), ui_editor_txt.get(1.0, "end-1c"))
+            print(self.active_snippet_id.get(), self.active_snippet_txt.get(1.0, "end-1c"))
+            m_service.update_snippet(self.active_snippet_id.get(), self.active_snippet_txt.get(1.0, "end-1c"))
+            _update_snippet_list()
+
+        def _new_snippet():
+            m_service.create_snippet("")
+            _update_snippet_list()
+            ui_snippet_list.select_set(0) 
+            ui_snippet_list.event_generate("<<ListboxSelect>>")
 
         def _save_snippet():
             m_service.create_snippet(ui_editor_txt.get(1.0, "end-1c"))
+            _update_snippet_list()
             
         def _update_snippet_list():
             ui_snippet_list.delete(0, "end")
-            for snippet in self.snippets:
-                ui_snippet_list.insert(snippet.get_id(), snippet.get_snippet())
+            for snippet in m_service.get_snippets():
+                list_item_str = f"({snippet.get_id()}) {snippet.get_snippet()}"
+                ui_snippet_list.insert(0, list_item_str)
 
         def _snippet_list_select(event):
-            selection = event.widget.curselection()
-            if selection:
-                snippet_id = selection[0] + 1
-                snippet_content = [snippet.get_snippet() for snippet in self.snippets if snippet.get_id() == snippet_id]
-                ui_editor_txt.delete(1.0, "end")
-                ui_editor_txt.insert(1.0, snippet_content)
-                active_snippet_id.set(snippet_id)
+            for item in event.widget.curselection():
+                snippet_str = ui_snippet_list.get(item)
+                snippet_id = int(snippet_str[snippet_str.find("(")+1:snippet_str.find(")")])
+                snippet = m_service.get_snippet(snippet_id)
+                self.active_snippet_id.set(snippet.get_id())
+                self.active_snippet_txt.set(snippet.get_snippet())
+            ui_editor_txt.delete(1.0, "end")
+            ui_editor_txt.insert(1.0, self.active_snippet_txt.get())
 
-        sidebar = tk.Frame(master=self._root, width=240, bg="grey")
+        menubar = tk.Frame(master=self._root, width=100, height=50, bg="grey")
+        menubar.pack(fill=tk.X, side=tk.TOP, expand=False)
+        sidebar = tk.Frame(master=self._root, width=320, bg="grey")
         sidebar.pack(fill=tk.BOTH, side=tk.LEFT, expand=False)
-        content_area = tk.Frame(master=self._root, width=400, bg="white")
+        content_area = tk.Frame(master=self._root, width=640, bg="white")
         content_area.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
-        tag_area = tk.Frame(master=self._root, width=100, bg="white")
-        tag_area.pack(fill=tk.BOTH, side=tk.RIGHT, expand=False)
-
-        entry = tk.Entry(master=self._root)
-        entry.pack()
-        #entry.focus_set()
 
         ui_editor_txt = tk.Text(master=content_area, height=5, width=20, exportselection=True) 
         ui_editor_txt.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
@@ -55,36 +60,21 @@ class UI:
         ui_editor_txt_scrollbar.config(command=ui_editor_txt.yview)
         ui_editor_txt.config(yscrollcommand=ui_editor_txt_scrollbar.set)
         ui_editor_txt.focus_set()
+        ui_editor_txt.bind("<KeyPress>", _update_snippet)
 
 
-        button1 = tk.Button(master=self._root, text="Load all", command=_get_snippets)
-        button2 = tk.Button(master=self._root, text="Update list", command=_update_snippet_list)
-        button3 = tk.Button(master=self._root, text="Save", command=_save_snippet)
-        button1.pack()
-        button2.pack()
-        button3.pack()
+        button1 = tk.Button(master=menubar, text="New Snippet", command=_new_snippet)
+        button2 = tk.Button(master=menubar, text="Save Snippet", command=_save_snippet)
+        button1.grid(row=0, column=0)
+        button2.grid(row=0, column=1)
 
         ui_snippet_list = tk.Listbox(master=sidebar)
         ui_snippet_list.pack(fill=tk.BOTH, side=tk.LEFT, expand=False)
         ui_snippet_list.bind("<<ListboxSelect>>", _snippet_list_select)
 
-        _get_snippets()
+        # Select most recent snippet in the list and update editor contents
         _update_snippet_list()
+        ui_snippet_list.select_set(0) 
+        ui_snippet_list.event_generate("<<ListboxSelect>>")
 
-
-        '''
-        entry = tk.Entry(master=self._root)
-        entry.pack()
-        entry.focus_set()
-
-        button1 = tk.Button(master=self._root, text="Load all", command=_get_snippets)
-        button2 = tk.Button(master=self._root, text="Update", command=_update_snippet)
-        button3 = tk.Button(master=self._root, text="Save", command=_save_snippet)
-        button1.pack()
-        button2.pack()
-        button3.pack()
-
-        listbox = tk.Listbox(master=sidebar, width=240)
-        listbox.pack()
-        '''
 

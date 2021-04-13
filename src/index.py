@@ -1,6 +1,8 @@
 from tkinter import Tk
+from services.monoa_service import m_service
 from ui.ui import UI
 
+    
 def main():
     window = Tk()
     window.title("MoNoA - Modular Notes App 0.1.0")
@@ -17,6 +19,7 @@ def main():
     ui = UI(window)
     ui.start()
     window.mainloop()
+
 
 if __name__ == "__main__":
     main()
