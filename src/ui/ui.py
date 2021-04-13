@@ -12,16 +12,16 @@ class UI:
 
     def start(self):
 
-        editor_active_snippet_id = tk.IntVar()
+        active_snippet_id = tk.IntVar()
 
         def _get_snippets():
             self.snippets = [snippet for snippet in m_service.get_snippets()]
 
         def _update_snippet():
-            m_service.update_snippet(1, "derp")
+            m_service.update_snippet(active_snippet_id.get(), ui_editor_txt.get(1.0, "end-1c"))
 
         def _save_snippet():
-            m_service.create_snippet(entry.get())
+            m_service.create_snippet(ui_editor_txt.get(1.0, "end-1c"))
             
         def _update_snippet_list():
             ui_snippet_list.delete(0, "end")
@@ -35,7 +35,7 @@ class UI:
                 snippet_content = [snippet.get_snippet() for snippet in self.snippets if snippet.get_id() == snippet_id]
                 ui_editor_txt.delete(1.0, "end")
                 ui_editor_txt.insert(1.0, snippet_content)
-                editor_active_snippet_id.set(snippet_id)
+                active_snippet_id.set(snippet_id)
 
         sidebar = tk.Frame(master=self._root, width=240, bg="grey")
         sidebar.pack(fill=tk.BOTH, side=tk.LEFT, expand=False)
