@@ -8,11 +8,13 @@ muistiinpanojaan (ja ajatustyötään) koostamalla isompia kokonaisuuksia (docum
 ## Tilannekatsaus ti 20.4.2021
 
 - Ohjelman voi onnistuneesti buildaa ja starttaa
-- Ulkoasu kehittynyt huomattavasti
-- Käyttäjä voi luoda uusia snippettejä
-- Käyttäjä voi katsoa jo luotuja snippetteja listasta
-- Snippetit tallentuvat sqlite3-tietokantaan
-- Testien haarautumakattavuus
+- Ohjelman voi halutessaan populoida demo-sisällöllä (kts. asennusohjeet)
+- Ulkoasu kehittynyt huomattavasti (tkinter vaihdettu -> pyqt5)
+- Käyttäjä voi katsoa jo luotoja noteseja ja snippettejä listalla
+- Notesit ja Snippetit on tallennettu sqlite3-tietokantaan
+- Ei voi tehdä uusia noteseja tai snippettejä...
+- ...eikä mitään ei voi kuitenkaan luoda tällä hetkellä
+- Testikattavuus kasvanut, pylint reilassa!
 
 
 ## Dokumentaatio

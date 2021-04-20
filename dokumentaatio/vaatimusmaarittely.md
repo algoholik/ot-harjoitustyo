@@ -20,14 +20,14 @@ Alkuvaiheessa sovelluksella on ainoastaan yksi käyttäjärooli eli _normaali k�
 Sovellus koostuu kahdesta eri päänäkymästä:
 
 1. Muokkausnäkymä:
-   - muistiinpanon valinta
+   - muistiinpanon valinta (TEHTY)
    - muistiinpanon muokkaus
      - snippetin lisäys muistiinpanoon
      - snippetin poisto muistiinpanosta
-   - lista snippeteistä
+   - lista snippeteistä (TEHTY)
 
 2. Hahmotusnäkymä:
-   - lista muistiinpanoista ja snippeteistä
+   - lista muistiinpanoista ja snippeteistä (TEHTY)
    - mahdollisuus lajitella muistiinpanoja ja snippettejä niiden sisällön mukaan
 
 
