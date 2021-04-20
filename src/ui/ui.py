@@ -1,80 +1,139 @@
-import tkinter as tk
-from tkinter.constants import ACTIVE
-from services.monoa_service import m_service
-from entities.snippet import Snippet
+from datetime import datetime
+#from PyQt5.QtGui import *
+#from PyQt5.QtCore import *
+from PyQt5.QtWidgets import (
+    QLabel,
+    QListView,
+    QListWidget, 
+    QMainWindow,
+    QStatusBar,
+    QCheckBox,
+    QShortcut,
+    QComboBox,
+    QLineEdit,
+    QMenu,
+    QAction,
+    QTabWidget,
+    QDockWidget,
+    QFormLayout,
+    QWidget,
+    QCompleter,
+    QSpacerItem,
+    QScrollArea,
+    QSizePolicy,
+    QHBoxLayout,
+    QStackedLayout,
+    QHeaderView,
+    QTableView,
+    QTextEdit,
+    QPlainTextEdit,
+    QToolBar,
+    QPushButton,
+    QVBoxLayout
+    )
+from services.monoa_service import monoa_service
+from entities.snip import Snip
+from entities.note import Note
+from config import SETTINGS_FILE_PATH
+import utils
 
-class UI:
-    def __init__(self, root):
-        self._root = root
-        self._root.columnconfigure(0, weight=1)
-        self._root.rowconfigure(0, weight=1)
+# Globals
+MONOA_WINDOW_TITLE = "MoNoA"
+MONOA_RELEASE = "MoNoA Modular Notes App (Version 0.2.0 early bird alpha)"
 
-        self.active_snippet_id = tk.IntVar()
-        self.active_snippet_txt = tk.StringVar()
-        #self._current_view = None
+class MonoaBrowser(QTabWidget):
+    '''
+    Monoa note editor UI class
+    '''
+    def __init__(self):
+        super().__init__()
+        self.addTab(self._createNotesList(), "Notes")
+        self.addTab(self._createSnippetsList(), "Snippets")
+        self.setMaximumWidth(300)
 
+    def _createNotesList(self):
+        note_list_widget = QListWidget()
+        note_list_widget.setSpacing(5)
+        for note in monoa_service.get_notes():
+            list_str = f"{note.get_name()} (#{note.get_id()})\n{note.get_content()[0:40]}"
+            note_list_widget.addItem(list_str)
+        return note_list_widget
 
-    def start(self):
-        def _update_snippet():
-            print(self.active_snippet_id.get(), self.active_snippet_txt.get())
-            m_service.update_snippet(self.active_snippet_id.get(), self.active_snippet_txt.get())
-            _update_snippet_list()
+    def _createSnippetsList(self):
+        snippet_list_widget = QListWidget()
+        snippet_list_widget.setSpacing(5)
+        for snippet in monoa_service.get_snips():
+            list_str = f"{snippet.get_name()} (#{snippet.get_id()})\n{snippet.get_content()[0:40]}"
+            snippet_list_widget.addItem(list_str)
+        return snippet_list_widget
 
-        def _new_snippet():
-            m_service.create_snippet("")
-            _update_snippet_list()
-            ui_snippet_list.select_set(0) 
-            ui_snippet_list.event_generate("<<ListboxSelect>>")
+class MonoaEditor(QVBoxLayout):
+    '''
+    Monoa note editor UI class
+    '''
+    def __init__(self, **params):
+        super().__init__()
+        self.addWidget(self._createInfoArea())
+        self.addWidget(self._createEditArea())
 
-        def _save_snippet():
-            m_service.create_snippet(ui_editor_txt.get(1.0, "end-1c"))
-            _update_snippet_list()
-            
-        def _update_snippet_list():
-            ui_snippet_list.delete(0, "end")
-            for snippet in m_service.get_snippets():
-                list_item_str = f"({snippet.get_id()}) {snippet.get_snippet()}"
-                ui_snippet_list.insert(0, list_item_str)
+    def _createInfoArea(self):
+        return QLabel("Wow")
 
-        def _snippet_list_select(event):
-            for item in event.widget.curselection():
-                snippet_str = ui_snippet_list.get(item)
-                snippet_id = int(snippet_str[snippet_str.find("(")+1:snippet_str.find(")")])
-                snippet = m_service.get_snippet(snippet_id)
-                self.active_snippet_id.set(snippet.get_id())
-                self.active_snippet_txt.set(snippet.get_snippet())
-            ui_editor_txt.delete(1.0, "end")
-            ui_editor_txt.insert(1.0, self.active_snippet_txt.get())
+    def _createEditArea(self):
+        monoa_editor = QTextEdit()
+        monoa_editor.setAcceptRichText(False)
+        return monoa_editor
 
-        menubar = tk.Frame(master=self._root, width=100, height=50, bg="grey")
-        menubar.pack(fill=tk.X, side=tk.TOP, expand=False)
-        sidebar = tk.Frame(master=self._root, width=320, bg="grey")
-        sidebar.pack(fill=tk.BOTH, side=tk.LEFT, expand=False)
-        content_area = tk.Frame(master=self._root, width=640, bg="white")
-        content_area.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
+class MonoaUI(QWidget):
+    '''
+    Monoa Layout class
+    '''
+    def __init__(self):
+        super().__init__()
+        self._createMainLayout()
 
-        ui_editor_txt = tk.Text(master=content_area, height=5, width=20, exportselection=True) 
-        ui_editor_txt.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
-        ui_editor_txt_scrollbar = tk.Scrollbar(master=content_area)
-        ui_editor_txt_scrollbar.pack(fill=tk.Y, side=tk.RIGHT, expand=False)
-        ui_editor_txt_scrollbar.config(command=ui_editor_txt.yview)
-        ui_editor_txt.config(yscrollcommand=ui_editor_txt_scrollbar.set)
-        ui_editor_txt.focus_set()
-        ui_editor_txt.bind("<KeyPress>", _update_snippet)
+    def _createMainLayout(self):
+        monoa_layout = QHBoxLayout()
+        self.setLayout(monoa_layout)
+        monoa_layout.addWidget(MonoaBrowser())
+        monoa_layout.addLayout(MonoaEditor())
 
+class MonoaMainWindow(QMainWindow):
+    '''
+    MonoaMainWindow class
+    '''
+    def __init__(self, parent=None, **params):
+        super().__init__(parent)
 
-        button1 = tk.Button(master=menubar, text="New Snippet", command=_new_snippet)
-        button2 = tk.Button(master=menubar, text="Save Snippet", command=_save_snippet)
-        button1.grid(row=0, column=0)
-        button2.grid(row=0, column=1)
+        # Set main window title and size
+        self.setWindowTitle(MONOA_WINDOW_TITLE)
+        self._setWindowSize(params)
 
-        ui_snippet_list = tk.Listbox(master=sidebar)
-        ui_snippet_list.pack(fill=tk.BOTH, side=tk.LEFT, expand=False)
-        ui_snippet_list.bind("<<ListboxSelect>>", _snippet_list_select)
+        # Create top level UI container
+        monoa_ui_container = MonoaUI()
+        self.setCentralWidget(monoa_ui_container)
 
-        # Select most recent snippet in the list and update editor contents
-        _update_snippet_list()
-        ui_snippet_list.select_set(0) 
-        ui_snippet_list.event_generate("<<ListboxSelect>>")
+        # Create main window status bar
+        self._createStatusBar()
 
-
+    def _createStatusBar(self):
+        '''
+        Create status bar at the bottom of the main window.
+        '''
+        self.status_bar = QStatusBar()
+        self.setStatusBar(self.status_bar)
+        self.status_bar.showMessage(MONOA_RELEASE)
+    
+    def _setWindowSize(self, params):
+        '''
+        Resize app window proportionate to user screen size 
+        and set minimum size for app window.
+        '''
+        screen_w = params['user_screen_size'].width()
+        screen_h = params['user_screen_size'].height()
+        window_w = screen_w - 200
+        window_h = screen_h - 200
+        window_x = screen_w // 2 - window_w // 2
+        window_y = screen_h // 2 - window_h // 2
+        self.setGeometry(window_x, window_y, window_w, window_h)
+        self.setMinimumSize(640, 400)

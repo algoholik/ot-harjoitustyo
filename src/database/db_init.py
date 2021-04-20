@@ -1,20 +1,32 @@
 from database.db_connect import get_db_connection
+import utils
+
+DATABASE_SCHEMA_FILE = utils.get_file_path("database/monoa-schema.sql")
 
 def drop_tables(connection):
+    '''
+    Clean up database file when making a new build
+    '''
     cursor = connection.cursor()
-    cursor.execute("drop table if exists notes;")
-    cursor.execute("drop table if exists snippets;")
-    cursor.execute("drop table if exists tags;")
+    cursor.execute("DROP TABLE IF EXISTS Notes;")
+    cursor.execute("DROP TABLE IF EXISTS Snippets;")
+    cursor.execute("DROP TABLE IF EXISTS Tags;")
+    cursor.execute("DROP TABLE IF EXISTS Tagging;")
     connection.commit()
 
 def create_tables(connection):
+    '''
+    Create database tables from schema file
+    '''
     cursor = connection.cursor()
-    cursor.execute("create table notes (id integer primary key, note text, updated datetime);")
-    cursor.execute("create table snippets (id integer primary key, snippet text, updated datetime);")
-    cursor.execute("create table tags (id integer primary key, tag text unique, updated datetime);")
+    with open(DATABASE_SCHEMA_FILE) as schema_file:
+        cursor.executescript(schema_file.read())
     connection.commit()
 
 def db_init():
+    '''
+    Initialize database file
+    '''
     connection = get_db_connection()
     drop_tables(connection)
     create_tables(connection)

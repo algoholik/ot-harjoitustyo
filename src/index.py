@@ -1,25 +1,21 @@
-from tkinter import Tk
-from services.monoa_service import m_service
-from ui.ui import UI
+'''
+MoNoA main app launcher
+'''
+import sys
+from PyQt5.QtWidgets import QApplication
+from ui.ui import MonoaMainWindow
 
-    
 def main():
-    window = Tk()
-    window.title("MoNoA - Modular Notes App 0.1.0")
-
-    screen_width = window.winfo_screenwidth()
-    screen_height = window.winfo_screenheight()
-    window_width = screen_width - 200
-    window_height = screen_height - 200
-    window_x = screen_width//2 - window_width//2
-    window_y = screen_height//2 - window_height//2
-    window.geometry(f"{window_width}x{window_height}+{window_x}+{window_y}")
-    window.minsize(screen_width//2, screen_height//2)
-
-    ui = UI(window)
-    ui.start()
-    window.mainloop()
-
+    '''
+    MoNoA main() function
+    - init instances of QApplication and MonoaMainWindow
+    - pass user screen size to MonoaMainWindow
+    - show main window
+    '''
+    app = QApplication(sys.argv)
+    win = MonoaMainWindow(user_screen_size=app.primaryScreen().size())
+    win.show()
+    sys.exit(app.exec())
 
 if __name__ == "__main__":
     main()

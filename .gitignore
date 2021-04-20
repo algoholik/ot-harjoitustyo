@@ -10,11 +10,22 @@ __pycache__
 /src/database/__pycache__/
 /src/services/__pycache__/
 
+#pylint
+.pylintrc
+
+#vs code
+.vscode
+modularnotes.code-workspace
+
 # data files
+/data/monoa-settings.json
 /data/monoa-db.sqlite3
 /data/monoa-db-test.sqlite3
 
-# laskari-spesific
+# qt designer
+qtdesigner
+
+# laskari spesific
 /laskarit/viikko2/unicafe/.pytest_cache
 /laskarit/viikko2/unicafe/src/__pycache__/
 /laskarit/viikko2/unicafe/src/tests/__pycache__/

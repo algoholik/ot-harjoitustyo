@@ -1,47 +1,92 @@
-from entities.snippet import Snippet
+'''
+Main module for handling notes and snips between UI and DB
+'''
 from entities.note import Note
+from entities.snip import Snip
 import database.db_handler as db_handler
 
-# Set the default content for a new snippet
-default_snippet_content = ""
-
-# Class for providing up-to-date list of content wherever needed
 class MonoaService:
+    '''
+    Main content handler class
+    '''
     def __init__(self):
-        self.snippets = []
-        self.load_snippets()
+        ''' Load all notes and snippets to lists '''
+        self.notes = []
+        self.snips = []
+        self._load_notes()
+        self._load_snips()
+        self._sort_notes()
 
-        # Initialize with an empty snippet if database empty
-        if len(self.snippets) == 0:
-            snippet = db_handler.create_snippet(default_snippet_content)
-            self.snippets.append(Snippet(snippet[0], snippet[1], snippet[2]))
+    def _sort_notes(self):
+        pass
 
-    def load_snippets(self):
-        self.snippets.clear()
-        for item in db_handler.load_snippets():
-            self.snippets.append(Snippet(item['id'], item['snippet'], item['updated']))
+    def _load_snips(self):
+        ''' Load snippets from database repository '''
+        snips = db_handler.load_snips()
+        for snip in snips:
+            self.snips.append(
+                Snip(snip['id'], snip['name'], snip['content'], snip['timestamp'])
+            )
 
-    def create_snippet(self, content: str):
-        snippet = db_handler.create_snippet(content)
-        self.snippets.append(Snippet(snippet[0], snippet[1], snippet[2]))
+    def create_snip(self, s_name: str, s_content: str):
+        ''' Create new snippet: '''
+        snip = db_handler.create_snip(s_name, s_content)
+        self.snips.append(
+            Snip(snip['id'], snip['name'], snip['content'], snip['timestamp'])
+        )
 
-    def update_snippet(self, id: int, content: str):
-        if db_handler.update_snippet(id, content):
-            self.load_snippets()
+    def update_snip(self, s_id: int, s_name: str, s_content: str):
+        ''' Update snip by the given id '''
+        if db_handler.update_snip(s_id, s_name, s_content):
+            self._load_snips()
         else:
             print("Could not save to database!")
 
-    def get_snippets(self):
-        return self.snippets
-    
-    def get_snippet(self, id: int):
+    def get_snips(self):
+        ''' Return list of snippets '''
+        return self.snips
+
+    def get_snip_by_id(self, s_id: int):
+        ''' Return snippet by id '''
         result = None
-        for snippet in self.snippets:
-            if snippet.get_id() == id:
-                result = snippet
+        for snip in self.snips:
+            if snip.get_id() == s_id:
+                result = snip
         return result
 
+    def _load_notes(self):
+        ''' Load all notes from database repository '''
+        notes = db_handler.load_notes()
+        for note in notes:
+            self.notes.append(
+                Note(note['id'], note['name'], note['content'], note['timestamp'])
+            )
 
-# Init MonoaService for global access
-m_service = MonoaService()
+    def create_note(self, n_name: str, n_content: str):
+        ''' Create new note: '''
+        note = db_handler.create_note(n_name, n_content)
+        self.notes.append(
+            Note( note['id'], note['name'], note['content'], note['timestamp'])
+        )
 
+    def update_note(self, n_id: int, n_name: str, n_content: str):
+        ''' Update note in database '''
+        if db_handler.update_note(n_id, n_name, n_content):
+            self._load_notes()
+        else:
+            print("Could not save to database!")
+
+    def get_notes(self):
+        ''' Return list of notes '''
+        return self.notes
+
+    def get_note_by_id(self, n_id: int):
+        ''' Return note by id '''
+        result = None
+        for note in self.notes:
+            if note.get_id() == n_id:
+                result = note
+        return result
+
+# One and only instance of this class
+monoa_service = MonoaService()
