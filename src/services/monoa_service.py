@@ -41,6 +41,12 @@ class MonoaService:
         self._sort_notes()
         return self.notes
 
+    def get_note_by_id(self, n_id: int) -> Note:
+        ''' Return note by id '''
+        for note in self.notes:
+            if note.get_id() == n_id:
+                return note
+
     def _load_notes(self) -> None:
         ''' Load all notes from database repository '''
         self.notes.clear()
