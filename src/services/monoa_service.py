@@ -3,8 +3,9 @@ Main module for handling notes and snips between UI and DB
 - provides up-to-date lists of snips and notes
 - keeps the lists sorted by timestamp, latest first
 '''
+from datetime import datetime
 from entities.note import Note
-from entities.snip import Snip
+#from entities.snip import Snip
 import database.db_handler as db_handler
 
 class MonoaService:
@@ -13,13 +14,57 @@ class MonoaService:
     '''
     def __init__(self):
         ''' Load all notes and snippets to lists '''
-        self.notes = []
-        self.snips = []
+        self.notes = list()
+        self.notesdict = dict()
         self._load_notes()
-        self._load_snips()
-        self._sort_snips()
+
+    def create_note(self, n_name: str, n_content: str, n_timestamp: datetime) -> Note:
+        ''' Create new note: '''
+        note = db_handler.create_note(n_name, n_content, n_timestamp)
+        self._load_notes()
+        self._sort_notes()
+        return self.get_note_by_id(note['id'])
+
+    def update_note(self, note: Note) -> None:
+        ''' Update note in database '''
+        db_handler.update_note(
+            note.get_id(),
+            note.get_name(),
+            note.get_content(),
+            note.get_timestamp()
+        )
+        self._load_notes()
         self._sort_notes()
 
+    def get_notes(self) -> list:
+        ''' Return notes '''
+        self._sort_notes()
+        return self.notes
+
+    def _load_notes(self) -> None:
+        ''' Load all notes from database repository '''
+        self.notes.clear()
+        for note in db_handler.load_notes():
+            self.notes.append(
+                Note(
+                    note['id'],
+                    note['name'],
+                    note['content'],
+                    note['timestamp']
+                )
+            )
+        self._sort_notes()
+
+    def _sort_notes(self) -> None:
+        ''' Keep self.notes sorted descending by the timestamp'''
+        notes_sortable = dict()
+        for note in self.notes:
+            notes_sortable[note.get_timestamp()] = note
+        self.notes.clear()
+        for key, value in sorted(notes_sortable.items(), reverse=True):
+            self.notes.append(value)
+
+    """
     def create_snip(self, s_name: str, s_content: str):
         ''' Create new snippet: '''
         snip = db_handler.create_snip(s_name, s_content)
@@ -28,7 +73,7 @@ class MonoaService:
         )
         self._sort_snips()
 
-    def update_snip(self, s_id: int, s_name: str, s_content: str):
+    def update_snip(self, s_id: int, s_name: str, s_content: str) -> None:
         ''' Update snip by the given id '''
         if db_handler.update_snip(s_id, s_name, s_content):
             self._load_snips()
@@ -48,35 +93,7 @@ class MonoaService:
                 result = snip
         return result
 
-    def create_note(self, n_name: str, n_content: str):
-        ''' Create new note: '''
-        note = db_handler.create_note(n_name, n_content)
-        self.notes.append(
-            Note( note['id'], note['name'], note['content'], note['timestamp'])
-        )
-        self._sort_notes()
-
-    def update_note(self, n_id: int, n_name: str, n_content: str):
-        ''' Update note in database '''
-        if db_handler.update_note(n_id, n_name, n_content):
-            self._load_notes()
-        else:
-            print("Could not save to database!")
-        self._sort_notes()
-
-    def get_notes(self):
-        ''' Return list of notes '''
-        return self.notes
-
-    def get_note_by_id(self, n_id: int):
-        ''' Return note by id '''
-        result = None
-        for note in self.notes:
-            if note.get_id() == n_id:
-                result = note
-        return result
-
-    def _load_snips(self):
+    def _load_snips(self) -> None:
         ''' Load snippets from database repository '''
         snips = db_handler.load_snips()
         for snip in snips:
@@ -85,16 +102,7 @@ class MonoaService:
             )
         self._sort_snips()
 
-    def _load_notes(self):
-        ''' Load all notes from database repository '''
-        notes = db_handler.load_notes()
-        for note in notes:
-            self.notes.append(
-                Note(note['id'], note['name'], note['content'], note['timestamp'])
-            )
-        self._sort_notes()
-
-    def _sort_snips(self):
+    def _sort_snips(self) -> None:
         ''' Keep self.snips sorted descending by the timestamp'''
         snips_sortable = dict()
         for snip in self.snips:
@@ -102,15 +110,7 @@ class MonoaService:
         self.snips.clear()
         for key, value in sorted(snips_sortable.items(), reverse=True):
             self.snips.append(value)
-
-    def _sort_notes(self):
-        ''' Keep self.notes sorted descending by the timestamp'''
-        notes_sortable = dict()
-        for note in self.notes:
-            notes_sortable[note.get_timestamp()] = note
-        self.notes.clear()
-        for key, value in sorted(notes_sortable.items(), reverse=True):
-            self.notes.append(value)
+    """
 
 # One and only instance of this class
 monoa_service = MonoaService()

@@ -13,6 +13,9 @@ __pycache__
 #pylint
 .pylintrc
 
+#mac os specific
+.DS_Store
+
 #vs code
 .vscode
 modularnotes.code-workspace

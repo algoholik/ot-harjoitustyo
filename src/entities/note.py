@@ -16,19 +16,19 @@ class Note:
         self.n_content      = n_content     #str: note content
         self.n_timestamp    = n_timestamp   #obj: datetime object of time last modified
 
-    def get_id(self):
+    def get_id(self) -> int:
         ''' Return note id (int) '''
         return self.n_id
 
-    def get_name(self):
+    def get_name(self) -> str:
         ''' Return note name (str) '''
         return self.n_name
 
-    def get_content(self):
+    def get_content(self) -> str:
         ''' Return note content (str) '''
         return self.n_content
 
-    def get_timestamp(self):
+    def get_timestamp(self) -> datetime:
         ''' Return note time last modified (datetime object) '''
         return self.n_timestamp
 

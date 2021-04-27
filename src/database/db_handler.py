@@ -54,7 +54,7 @@ def load_snips():
     CONNECTION.commit()
     return snips
 
-def create_note(n_name: str, n_content: str):
+def create_note(n_name: str, n_content: str, n_timestamp: datetime):
     '''
     Create note
     '''
@@ -66,7 +66,7 @@ def create_note(n_name: str, n_content: str):
     inj =   {
                 "n_name": n_name,
                 "n_content": n_content,
-                "n_timestamp": datetime.datetime.now()
+                "n_timestamp": n_timestamp
             }
     lid = cur.execute(sql, inj).lastrowid
     sql = "SELECT * FROM Notes WHERE id=:lid"
@@ -74,28 +74,21 @@ def create_note(n_name: str, n_content: str):
     CONNECTION.commit()
     return res
 
-def update_note(n_id: int, n_name: str, n_content: str):
+def update_note(n_id: int, n_name: str, n_content: str, n_timestamp: datetime):
     '''
     Update note
     '''
-    try:
-        cur = CONNECTION.cursor()
-        sql =   """   
+    cur = CONNECTION.cursor()
+    sql =   """   
                     UPDATE Notes 
                     SET name=:n_name, content=:n_content, timestamp=:n_timestamp 
                     WHERE id=:n_id
                 """
-        inj =   {
-                    "n_name": n_name,
-                    "n_content": n_content,
-                    "n_timestamp": datetime.datetime.now(),
-                    "n_id": n_id
-                }
-        cur.execute(sql, inj)
-        CONNECTION.commit()
-        return True
-    except:
-        return False
+    res = cur.execute(sql, {"n_name": n_name, 
+                            "n_content": n_content, 
+                            "n_timestamp": n_timestamp, 
+                            "n_id": n_id})
+    CONNECTION.commit()
 
 def load_notes():
     '''

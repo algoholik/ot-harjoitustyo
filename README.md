@@ -5,7 +5,7 @@ muistiinpanojaan (ja ajatustyötään) koostamalla isompia kokonaisuuksia (docum
 (snippets).
 
 
-## Tilannekatsaus ti 20.4.2021
+## Tilannekatsaus ti 27.4.2021
 
 - Ohjelman voi onnistuneesti buildaa ja starttaa
 - Ohjelman voi halutessaan populoida demo-sisällöllä (kts. asennusohjeet)
