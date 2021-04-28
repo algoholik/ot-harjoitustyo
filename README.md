@@ -37,10 +37,6 @@ poetry install
 
 2. Suorita vaadittavat alustukset:
 ```bash
-poetry run invoke build
-```
-(2.1. Vaihtoehtoisesti voit alustaa sovelluksen esimerkkisisällöllä demoamistarkoituksiin:)
-```bash
 poetry run invoke build-demo
 ```
 
