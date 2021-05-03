@@ -12,8 +12,8 @@ def drop_tables(connection):
     cursor.execute("DROP TABLE IF EXISTS Snips;")
     cursor.execute("DROP TABLE IF EXISTS Tags;")
     cursor.execute("DROP TABLE IF EXISTS Tagging;")
-    cursor.execute("DROP TABLE IF EXISTS Cats;")
-    cursor.execute("DROP TABLE IF EXISTS Catting;")
+    cursor.execute("DROP TABLE IF EXISTS Categories;")
+    cursor.execute("DROP TABLE IF EXISTS Categorisation;")
     connection.commit()
 
 def create_tables(connection):

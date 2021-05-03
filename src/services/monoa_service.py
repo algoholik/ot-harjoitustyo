@@ -3,9 +3,10 @@ Main module for handling notes and snips between UI and DB
 - provides up-to-date lists of snips and notes
 - keeps the lists sorted by timestamp, latest first
 '''
+from collections import OrderedDict
 from datetime import datetime
 from entities.note import Note
-#from entities.snip import Snip
+from entities.snip import Snip
 import database.db_handler as db_handler
 
 class MonoaService:
@@ -15,85 +16,137 @@ class MonoaService:
     def __init__(self):
         ''' Load all notes and snippets to lists '''
         self.notes = list()
-        self.notesdict = dict()
+        self.snip_dict = OrderedDict()
+        self.note_dict = OrderedDict()
         self._load_notes()
+        self._autocreate_note_if_none()
 
-    def create_note(self, n_name: str, n_content: str, n_timestamp: datetime) -> Note:
+    def create_note(self, title: str) -> Note:
         ''' Create new note: '''
-        note = db_handler.create_note(n_name, n_content, n_timestamp)
+        init_snip = self.create_snip("")
+        snip_list = ";".join([str(init_snip.get_id())])
+        note = db_handler.create_note(title, snip_list, datetime.now())
+        self.note_dict[note['id']] =    Note(
+                                            note['id'],
+                                            note['title'],
+                                            note['contents'],
+                                            note['modified']
+                                        )
         self._load_notes()
-        self._sort_notes()
         return self.get_note_by_id(note['id'])
+
+    def create_snip(self, content: str) -> Snip:
+        ''' Create new snip. '''
+        snip = db_handler.create_snip(0, content, datetime.now())
+        self.snip_dict[snip['id']] =    Snip(
+                                            snip['id'],
+                                            snip['sniptype'],
+                                            snip['content'],
+                                            snip['modified']
+                                        )
+        self._load_snips()
+        return self.get_snip_by_id(snip['id'])
+
+    def create_snip_inside_note(self, note_id: int) -> Snip:
+        snip = self.create_snip("")
+        self.note_dict.get(note_id).add_content(snip)
+        self.update_note(self.get_note_by_id(note_id))
+        return snip
+
+    def get_note_by_id(self, id: int) -> Note:
+        ''' Return note by id '''
+        return self.note_dict.get(id)
+
+    def get_snip_by_id(self, id: int) -> Snip:
+        ''' Return snip by id '''
+        return self.snip_dict.get(id)
 
     def update_note(self, note: Note) -> None:
         ''' Update note in database '''
+        contents = []
+        for snip in note.get_contents():
+            contents.append(str(snip.get_id()))
         db_handler.update_note(
             note.get_id(),
-            note.get_name(),
-            note.get_content(),
-            note.get_timestamp()
+            note.get_title(),
+            contents,
+            note.get_modified()
         )
         self._load_notes()
         self._sort_notes()
 
     def get_notes(self) -> list:
         ''' Return notes '''
-        if len(self.notes) == 0:
-            note = self.create_note("Welcome to MoNoA!", "Start writing...", datetime.now())
-        self._load_notes()
-        self._sort_notes()
-        return self.notes
+        if len(self.note_dict) == 0:
+            self.create_note("")
+            self._load_notes()
+        return list(self.note_dict.values())
+
+    def get_snips(self) -> list:
+        ''' Return notes '''
+        return list(self.snip_dict.values())
 
     def get_latest_note_id(self) -> int:
-        self._sort_notes()
-        return int(self.notes[0].get_id())
+        return max(self.note_dict)
 
-
-    def get_note_by_id(self, n_id: int) -> Note:
-        ''' Return note by id '''
-        for note in self.notes:
-            if note.get_id() == n_id:
-                return note
+    def get_latest_note(self) -> Note:
+        note_id = next(reversed(self.note_dict))
+        return self.note_dict.get(note_id)
 
     def _load_notes(self) -> None:
-        ''' Load all notes from database repository '''
-        self.notes.clear()
+        ''' Load all notes from database. '''
+        self._load_snips()
         for note in db_handler.load_notes():
-            self.notes.append(
-                Note(
-                    note['id'],
-                    note['name'],
-                    note['content'],
-                    note['timestamp']
-                )
-            )
-        self._sort_notes()
+            snips = [self.get_snip_by_id(int(snip)) for snip in note['contents'].split(";")]
+            self.note_dict[note['id']] =    Note(
+                                                note['id'],
+                                                note['title'],
+                                                snips,
+                                                note['modified']
+                                            )
+
+    def _load_snips(self) -> None:
+        ''' Load all snips from database. '''
+        for snip in db_handler.load_snips():
+            self.snip_dict[snip['id']] =    Snip(
+                                                snip['id'],
+                                                snip['sniptype'],
+                                                snip['content'],
+                                                snip['modified']
+                                            )
+
+    def _autocreate_note_if_none(self) -> None:
+        if len(self.note_dict) == 0:
+            self.create_note("")
 
     def _sort_notes(self) -> None:
         ''' Keep self.notes sorted descending by the timestamp'''
-        notes_sortable = dict()
-        for note in self.notes:
-            notes_sortable[note.get_timestamp()] = note
-        self.notes.clear()
+        notes_sortable = OrderedDict()
+        for key, value in self.note_dict.items():
+            notes_sortable[value.get_modified()] = value
         for key, value in sorted(notes_sortable.items(), reverse=True):
-            self.notes.append(value)
+            self.note_dict[key] = value
+
+    def _sort_snips(self) -> None:
+        ''' Keep self.snips sorted descending by the timestamp'''
+        snips_sortable = OrderedDict()
+        for key, value in self.snip_dict.items():
+            snips_sortable[value.get_modified()] = value
+        for key, value in sorted(snips_sortable.items(), reverse=True):
+            self.snip_dict[key] = value
+
+    def update_snip(self, snip: Snip) -> None:
+        ''' Update snip by the given id '''
+        db_handler.update_snip(
+            snip.get_id(),
+            snip.get_sniptype(),
+            snip.get_content(),
+            datetime.now()
+        )
+        self._load_snips()
+        self._sort_snips()
 
     """
-    def create_snip(self, s_name: str, s_content: str):
-        ''' Create new snippet: '''
-        snip = db_handler.create_snip(s_name, s_content)
-        self.snips.append(
-            Snip(snip['id'], snip['name'], snip['content'], snip['timestamp'])
-        )
-        self._sort_snips()
-
-    def update_snip(self, s_id: int, s_name: str, s_content: str) -> None:
-        ''' Update snip by the given id '''
-        if db_handler.update_snip(s_id, s_name, s_content):
-            self._load_snips()
-        else:
-            print("Could not save to database!")
-        self._sort_snips()
 
     def get_snips(self):
         ''' Return list of snippets '''

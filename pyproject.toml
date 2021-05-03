@@ -11,6 +11,7 @@ pylint = "^2.7.4"
 python-dotenv = "^0.16.0"
 PyQt5 = "^5.15.4"
 Faker = "^8.1.0"
+QScintilla = "^2.12.1"
 
 [tool.poetry.dev-dependencies]
 coverage = "^5.5"

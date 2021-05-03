@@ -19,7 +19,7 @@ from config import SETTINGS_FILE_PATH
 import utils
 
 from ui.monoa_browser import MonoaBrowser
-from ui.monoa_editor import MonoaEditor
+from ui.monoa_note_viewer import MonoaNoteViewer
 
 # Globals
 MONOA_WINDOW_TITLE = "MoNoA"
@@ -30,6 +30,7 @@ class MonoaUI(QWidget):
     Monoa main UI structure
     '''
     signal_note_selected = QtCore.pyqtSignal(Note)
+    signal_snip_updated = QtCore.pyqtSignal(Snip)
     def __init__(self):
         super().__init__()
 
@@ -37,20 +38,29 @@ class MonoaUI(QWidget):
         self.setLayout(self.monoa_layout)
 
         self.monoa_browser = MonoaBrowser()
-        self.monoa_editor = MonoaEditor(monoa_service.get_notes()[0])
+        self.monoa_viewer = MonoaNoteViewer()
+
         self.monoa_layout.addWidget(self.monoa_browser)
-        self.monoa_layout.addLayout(self.monoa_editor)
+        self.monoa_layout.addWidget(self.monoa_viewer)
+        self.monoa_layout.setContentsMargins(0,0,0,0)
+        self.monoa_layout.setSpacing(0)
+
 
         # PyQt Signals that update note under editing
         self.monoa_browser.signal_note_selected.connect(self._signal_handler_note_selected)
-        self.monoa_editor.signal_note_updated.connect(self._signal_handler_note_updated)
+        self.monoa_viewer.signal_note_updated.connect(self._signal_handler_note_updated)
+        self.monoa_viewer.signal_snip_updated.connect(self._signal_handler_snip_updated)
 
     def _signal_handler_note_selected(self, note):
-        self.monoa_editor.update_note(note)
+        self.monoa_viewer.update_note(note)
 
     def _signal_handler_note_updated(self, note):
         self.monoa_browser.update_active_note(note)
         self.parent().update_window(note)
+
+    def _signal_handler_snip_updated(self, snip):
+        self.monoa_browser.update_active_note(note)
+        #self.parent().update_window(note)
 
 
 class MonoaMainWindow(QMainWindow):
@@ -61,13 +71,14 @@ class MonoaMainWindow(QMainWindow):
         super().__init__(parent)
         # Set main window title and size
         self.setWindowTitle(MONOA_WINDOW_TITLE)
+        self.setContentsMargins(0,0,0,0)
         self._set_window_size(params)
         self._create_statusbar()
         ui_container = MonoaUI()
         self.setCentralWidget(ui_container)
 
     def update_window(self, note: Note):
-        self.setWindowTitle(f"{MONOA_WINDOW_TITLE} - {note.get_name()}")
+        self.setWindowTitle(f"{MONOA_WINDOW_TITLE} - {note.get_title()}")
 
     def _create_statusbar(self) -> None:
         ''' Create status bar at the bottom of the main window. '''
@@ -85,3 +96,4 @@ class MonoaMainWindow(QMainWindow):
         window_y = screen_h // 2 - window_h // 2
         self.setGeometry(window_x, window_y, window_w, window_h)
         self.setMinimumSize(640, 400)
+        #self.showMaximized()

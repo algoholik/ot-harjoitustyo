@@ -1,39 +1,37 @@
 CREATE TABLE Notes (
     id INTEGER PRIMARY KEY,
-    name TEXT,
-    content TEXT,
-    timestamp TIMESTAMP
+    title TEXT,
+    contents TEXT,
+    modified TIMESTAMP
 );
 
 CREATE TABLE Snips (
     id INTEGER PRIMARY KEY,
-    name TEXT,
+    sniptype INTEGER DEFAULT 0,
     content TEXT,
-    timestamp TIMESTAMP
+    modified TIMESTAMP
+);
+
+CREATE TABLE Categories (
+    id INTEGER PRIMARY KEY,
+    name TEXT UNIQUE,
+    modified TIMESTAMP
+);
+
+CREATE TABLE Categorisation (
+    id INTEGER PRIMARY KEY,
+    note_id INTEGER REFERENCES Notes,
+    category_id INTEGER REFERENCES Categories
 );
 
 CREATE TABLE Tags (
     id INTEGER PRIMARY KEY,
     name TEXT UNIQUE,
-    timestamp TIMESTAMP
+    modified TIMESTAMP
 );
 
 CREATE TABLE Tagging (
     id INTEGER PRIMARY KEY,
     snip_id INTEGER REFERENCES Snips,
-    tag_id INTEGER REFERENCES Tags,
-    timestamp TIMESTAMP
-);
-
-CREATE TABLE Cats (
-    id INTEGER PRIMARY KEY,
-    name TEXT UNIQUE,
-    timestamp TIMESTAMP
-);
-
-CREATE TABLE Catting (
-    id INTEGER PRIMARY KEY,
-    note_id INTEGER REFERENCES Notes,
-    cat_id INTEGER REFERENCES Cats,
-    timestamp TIMESTAMP
+    tag_id INTEGER REFERENCES Tags
 );

@@ -7,51 +7,57 @@ class Snip:
     '''-------------------------------------------------------------------------------------
     Snip class
     -------------------------------------------------------------------------------------'''
-    def __init__(self, s_id: int, s_name: str, s_content: str, s_timestamp: datetime):
+    def __init__(
+        self, 
+        sid: int, 
+        sniptype: int, 
+        content: str, 
+        modified: datetime
+        ):
         '''---------------------------------------------------------------------------------
         Initialize Snip object with parameters:
         ---------------------------------------------------------------------------------'''
-        self.s_id           = s_id          #int: unique snip id generated in database
-        self.s_name         = s_name        #str: snip name
-        self.s_content      = s_content     #str: snip content
-        self.s_timestamp    = s_timestamp   #obj: datetime object of time last modified
+        self.sid:       int         = sid          #int: unique snip id generated in database
+        self.sniptype:  int         = sniptype        #str: snip name
+        self.content:   str         = content     #str: snip content
+        self.modified:  datetime    = modified   #obj: datetime object of time last modified
 
-    def get_id(self):
+    def get_id(self) -> int:
         ''' Return snippet id (int) '''
-        return self.s_id
+        return self.sid
 
-    def get_name(self):
+    def get_sniptype(self) -> int:
         ''' Return snip name (str) '''
-        return self.s_name
+        return self.sniptype
 
-    def get_content(self):
+    def get_content(self) -> str:
         ''' Return snip content (str) '''
-        return self.s_content
+        return self.content
 
-    def get_timestamp(self):
+    def get_modified(self) -> datetime:
         ''' Return snip time last modified (datetime object) '''
-        return self.s_timestamp
+        return self.modified
 
-    def set_id(self, s_id: int):
+    def set_id(self, sid: int) -> None:
         ''' Set snip id '''
-        self.s_id = s_id
+        self.sid = int(sid)
 
-    def set_name(self, s_name: str):
+    def set_sniptype(self, sniptype: int) -> None:
         ''' Set snip name (str) '''
-        self.s_name = s_name
+        self.sniptype = sniptype
 
-    def set_content(self, s_content: str):
+    def set_content(self, content: str) -> None:
         ''' Set snip content (str) '''
-        self.s_content = s_content
+        self.content = str(content)
 
-    def set_timestamp(self, s_timestamp: datetime):
+    def set_timestamp(self, modified: datetime) -> None:
         ''' Set snip time last modified (datetime object) '''
-        self.s_timestamp = s_timestamp
+        self.modified = modified
 
-    def __str__(self):
+    def __str__(self) -> str:
         ''' Snip object __str__ '''
-        return f"{self.s_id}\n{self.s_name}\n{self.s_content}\n{self.s_timestamp}"
+        return f"Snip #{str(self.sid)} Type: {self.sniptype} Modified: {str(self.modified)}\n{self.content}\n"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         ''' Snip object __repr__ '''
-        return f"{self.s_id}\n{self.s_name}\n{self.s_content}\n{self.s_timestamp}"
+        return f"Snip #{str(self.sid)} Type: {self.sniptype} Modified: {str(self.modified)}\n{self.content}\n"

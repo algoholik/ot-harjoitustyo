@@ -3,17 +3,17 @@ from database.db_connect import get_db_connection
 
 CONNECTION = get_db_connection()
 
-def create_snip(s_name: str, s_content: str):
+def create_snip(sniptype: int, content: str, modified: datetime):
     '''
     Create new snip and return it
     '''
     cur = CONNECTION.cursor()
-    sql = """   INSERT INTO Snips (name, content, timestamp) 
-                VALUES (:s_name, :s_content, :s_timestamp) """
+    sql = """   INSERT INTO Snips (sniptype, content, modified) 
+                VALUES (:sniptype, :content, :modified) """
     inj = {
-        "s_name": s_name,
-        "s_content": s_content,
-        "s_timestamp": datetime.datetime.now()
+        "sniptype": sniptype,
+        "content": content,
+        "modified": modified
     }
     lid = cur.execute(sql, inj).lastrowid
     sql = "SELECT * FROM Snips WHERE id=:lid"
@@ -21,28 +21,21 @@ def create_snip(s_name: str, s_content: str):
     CONNECTION.commit()
     return res
 
-def update_snip(s_id: int, s_name: str, s_content: str):
+def update_snip(id: int, sniptype: int, content: str, modified: datetime):
     '''
     Update by id snip in database
     '''
-    try:
-        cur = CONNECTION.cursor()
-        sql =   """   
-                    UPDATE Snips 
-                    SET name=:s_name, content=:s_content, timestamp=:s_updated 
-                    WHERE id=:s_id 
-                """
-        inj =   {
-                    "s_name": s_name,
-                    "s_content": s_content,
-                    "s_timestamp": datetime.datetime.now(),
-                    "s_id": s_id
-                }
-        cur.execute(sql, inj)
-        CONNECTION.commit()
-        return True
-    except:
-        return False
+    cur = CONNECTION.cursor()
+    sql =   """   
+                UPDATE Snips 
+                SET sniptype=:sniptype, content=:content, modified=:modified 
+                WHERE id=:id 
+            """
+    res = cur.execute(sql, {"sniptype": sniptype, 
+                            "content": content, 
+                            "modified": modified, 
+                            "id": id})
+    CONNECTION.commit()
 
 def load_snips():
     '''
@@ -54,19 +47,19 @@ def load_snips():
     CONNECTION.commit()
     return snips
 
-def create_note(n_name: str, n_content: str, n_timestamp: datetime):
+def create_note(title: str, contents: list, modified: datetime):
     '''
     Create note
     '''
     cur = CONNECTION.cursor()
     sql =   """ 
-                INSERT INTO Notes (name, content, timestamp) 
-                VALUES (:n_name, :n_content, :n_timestamp) 
+                INSERT INTO Notes (title, contents, modified) 
+                VALUES (:title, :contents, :modified) 
             """
     inj =   {
-                "n_name": n_name,
-                "n_content": n_content,
-                "n_timestamp": n_timestamp
+                "title": title,
+                "contents": ";".join([str(snip) for snip in contents]),
+                "modified": modified
             }
     lid = cur.execute(sql, inj).lastrowid
     sql = "SELECT * FROM Notes WHERE id=:lid"
@@ -74,20 +67,20 @@ def create_note(n_name: str, n_content: str, n_timestamp: datetime):
     CONNECTION.commit()
     return res
 
-def update_note(n_id: int, n_name: str, n_content: str, n_timestamp: datetime):
+def update_note(id: int, title: str, contents: list, modified: datetime):
     '''
     Update note
     '''
     cur = CONNECTION.cursor()
     sql =   """   
                     UPDATE Notes 
-                    SET name=:n_name, content=:n_content, timestamp=:n_timestamp 
-                    WHERE id=:n_id
+                    SET title=:title, contents=:contents, modified=:modified 
+                    WHERE id=:id
                 """
-    res = cur.execute(sql, {"n_name": n_name, 
-                            "n_content": n_content, 
-                            "n_timestamp": n_timestamp, 
-                            "n_id": n_id})
+    res = cur.execute(sql, {"title": title, 
+                            "contents": ";".join([str(snip) for snip in contents]), 
+                            "modified": modified, 
+                            "id": id})
     CONNECTION.commit()
 
 def load_notes():

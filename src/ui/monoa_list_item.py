@@ -2,75 +2,61 @@ from datetime import datetime
 from PyQt5 import QtCore
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QCursor, QMouseEvent
-from PyQt5.QtWidgets import (
-    QMainWindow,    QLabel,             QListWidget,
-    QStatusBar,     QLineEdit,          QMenu,
-    QAction,        QTabWidget,         QDockWidget,
-    QFormLayout,    QWidget,            QHBoxLayout,
-    QTextEdit,      QToolBar,           QPushButton,
-    QVBoxLayout,    QSpacerItem,        QSizePolicy,
-    QScrollArea,    QCompleter,         QButtonGroup
-    )
+from PyQt5.QtGui import (QCursor, QMouseEvent)
+from PyQt5.QtWidgets import (QLabel, QWidget, QVBoxLayout)
 from services.monoa_service import monoa_service
-from entities.snip import Snip
 from entities.note import Note
 from config import SETTINGS_FILE_PATH
-import utils
 
-
-class NoteListItem(QWidget):
+class MonoaListItem(QWidget):
     '''
     Notes list item widget class
     '''
     signal_note_selected = QtCore.pyqtSignal(Note)
     def __init__(self, note: Note):
-        super(NoteListItem, self).__init__()
+        super(MonoaListItem, self).__init__()
 
         self.note = note
         self.is_active = False
 
-        self.setStyleSheet("color: #000000;")
         self.setMaximumHeight(84)
         self.setContentsMargins(0,0,0,0)
         self.setAutoFillBackground(True)
         self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
         self.setStyleSheet("background-color: transparent;")
 
-        self.note_name = QLabel("Untitled")
-        self.note_content = QLabel("New note")
+        self.note_title = QLabel("Untitled")
+        self.note_content = QLabel("New note with no content")
 
         self.note_layout = QVBoxLayout()
-        self.note_layout.addWidget(self.note_name)
+        self.note_layout.addWidget(self.note_title)
         self.note_layout.addWidget(self.note_content)
         self.setLayout(self.note_layout)
         self.note_layout.setAlignment(Qt.AlignTop)
 
-        # Update selected note list item.
-        self.update_active_note_selection()
-
-        self.note_name.setStyleSheet("font-size: 15px; font-weight: bold; margin: 0; padding: 0;")
-        self.note_name.setMaximumWidth(320)
+        self.note_title.setStyleSheet("font-size: 15px; font-weight: bold; margin: 0; padding: 0;")
+        self.note_title.setMaximumWidth(320)
         self.note_content.setStyleSheet("font-size: 13px; font-weight: normal; margin: 0; padding: 0;")
         self.note_content.setWordWrap(True)
         self.note_content.setMaximumWidth(320)
 
+        # Update selected note list item.
+        self.update_active_note_selection()
+
     def get_searchable_content(self) -> str:
         ''' Merge note id, name, content and datetime as one string to search from. '''
-        all_note_content = [
-            str(self.note.get_id()),
-            self.note.get_name().replace("\n", "").strip(),
-            self.note.get_content().replace("\n", "").strip()
-        ]
-        return " ".join(all_note_content).lower()
+        note_snips_content = [snip.get_content() for snip in self.note.get_contents()]
+        snips = " ".join(note_snips_content).replace("\n", " ").lower()
+        searchable_content = f"{self.note.get_title().lower()} {snips}"
+        return searchable_content
 
     def get_note_id(self) -> int:
         ''' Return note id. '''
         return self.note.get_id()
 
-    def get_note_name(self) -> str:
-        ''' Return note name. '''
-        return self.note.get_name()
+    def get_note_title(self) -> str:
+        ''' Return note title. '''
+        return self.note.get_title()
 
     def init_note(self, note: Note) -> None:
         ''' Initialize with given Note object and update note list item labels. '''
@@ -84,19 +70,26 @@ class NoteListItem(QWidget):
 
     def _update_labels(self) -> None:
         ''' Update note list item labels. '''
-        note_name_formatted = self.note.get_name().replace("\n", " ")[0:80]
-        note_content_formatted = self.note.get_content().replace("\n", " ")[0:80]
-        self.note_name.setText(f"{note_name_formatted}")
-        self.note_content.setText(f"{note_content_formatted}")
+        note_title = self.note.get_title()
+        note_contents = [snip.get_content() for snip in self.note.get_contents() if snip]
+        note_snips_merged = " ".join(note_contents).replace("\n", " ").strip()[:90]
+        if len(note_title) > 0:
+            self.note_title.setText(f"{note_title}")
+        else:
+            self.note_title.setText("Untitled")
+        if len(note_snips_merged) > 0:
+            self.note_content.setText(f"{note_snips_merged}")
+        else:
+            self.note_content.setText("Empty note")
 
     def show(self) -> None:
         ''' Show note list item when matched in search. '''
-        for element in [self, self.note_name, self.note_content]:
+        for element in [self, self.note_title, self.note_content]:
             element.setVisible(True)
 
     def hide(self) -> None:
         ''' Hide note list item when matched in search. '''
-        for element in [self, self.note_name, self.note_content]:
+        for element in [self, self.note_title, self.note_content]:
             element.setVisible(False)
 
     def activate(self) -> None:

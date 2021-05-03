@@ -277,6 +277,18 @@ python-versions = "*"
 cli = ["click (>=5.0)"]
 
 [[package]]
+name = "qscintilla"
+version = "2.12.1"
+description = "Python bindings for the QScintilla programmers editor widget"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+PyQt5 = ">=5.15.4"
+PyQt5-sip = ">=12.8,<13"
+
+[[package]]
 name = "six"
 version = "1.15.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -339,7 +351,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "5232b2e7725eb8d7800f70ba994acfbb3a5bc25a5b6476689f90368e742c7a70"
+content-hash = "5fdcc1e93b2642128b1b676e1d964f36c164f0769d4e418835f52a90890d80a4"
 
 [metadata.files]
 astroid = [
@@ -536,6 +548,13 @@ python-dateutil = [
 python-dotenv = [
     {file = "python-dotenv-0.16.0.tar.gz", hash = "sha256:9fa413c37d4652d3fa02fea0ff465c384f5db75eab259c4fc5d0c5b8bf20edd4"},
     {file = "python_dotenv-0.16.0-py2.py3-none-any.whl", hash = "sha256:31d752f5b748f4e292448c9a0cac6a08ed5e6f4cefab85044462dcad56905cec"},
+]
+qscintilla = [
+    {file = "QScintilla-2.12.1-cp36.cp37.cp38.cp39-abi3-macosx_10_13_intel.whl", hash = "sha256:41e3b728e8309bda50eba92e2fa7235e8edb8573a6cb17ebe96f46f5970b7336"},
+    {file = "QScintilla-2.12.1-cp36.cp37.cp38.cp39-abi3-manylinux2014_x86_64.whl", hash = "sha256:5296a9e58a0024d8bb3079792e2877a93893b3d82a10556bc72c70a0b93ecad8"},
+    {file = "QScintilla-2.12.1-cp36.cp37.cp38.cp39-none-win32.whl", hash = "sha256:be88dc23f8189934a30039f562eedc18fab2532919322567125890b6e2a650da"},
+    {file = "QScintilla-2.12.1-cp36.cp37.cp38.cp39-none-win_amd64.whl", hash = "sha256:cc5fce385c57a87a79f1866b79e13eb7ae2c46113d500c6d53112dc87a0c167e"},
+    {file = "QScintilla-2.12.1.tar.gz", hash = "sha256:a1e4f8973202ff131ed7f2c82cda50fe2dc709d4f49f15289df6b5b992bffd8a"},
 ]
 six = [
     {file = "six-1.15.0-py2.py3-none-any.whl", hash = "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"},

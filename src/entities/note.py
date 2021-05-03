@@ -2,56 +2,70 @@
 Module for Note class
 '''
 from datetime import datetime
+from entities.snip import Snip
 
 class Note:
     '''-------------------------------------------------------------------------------------
     Note class
     -------------------------------------------------------------------------------------'''
-    def __init__(self, n_id: int, n_name: str, n_content: str, n_timestamp: datetime):
+    def __init__(
+        self, 
+        nid: int, 
+        title: str, 
+        contents: list, 
+        modified: datetime
+        ):
         '''---------------------------------------------------------------------------------
         Initialize Note object with parameters:
         ---------------------------------------------------------------------------------'''
-        self.n_id           = n_id          #int: unique note id generated in database
-        self.n_name         = n_name        #str: note name
-        self.n_content      = n_content     #str: note content
-        self.n_timestamp    = n_timestamp   #obj: datetime object of time last modified
+        self.nid:       int         = nid           #int: unique note id generated in database
+        self.title:     str         = title         #str: note name
+        self.contents:  list        = contents      #str: note content
+        self.modified:  datetime    = modified      #obj: datetime object of time last modified
 
     def get_id(self) -> int:
         ''' Return note id (int) '''
-        return self.n_id
+        return self.nid
 
-    def get_name(self) -> str:
+    def get_title(self) -> str:
         ''' Return note name (str) '''
-        return self.n_name
+        return self.title
 
-    def get_content(self) -> str:
+    def get_contents(self) -> list:
         ''' Return note content (str) '''
-        return self.n_content
+        return self.contents
 
-    def get_timestamp(self) -> datetime:
+    def get_modified(self) -> datetime:
         ''' Return note time last modified (datetime object) '''
-        return self.n_timestamp
+        return self.modified
 
-    def set_id(self, n_id: int):
+    def set_id(self, nid: int) -> None:
         ''' Set note id '''
-        self.n_id = n_id
+        self.nid = nid
 
-    def set_name(self, n_name: str):
+    def set_title(self, title: str) -> None:
         ''' Set note name (str) '''
-        self.n_name = n_name
+        self.title = title
 
-    def set_content(self, n_content: str):
+    def set_contents(self, contents: list) -> None:
         ''' Set note content (str) '''
-        self.n_content = n_content
+        self.contents = contents
 
-    def set_timestamp(self, n_timestamp: datetime):
+    def set_modified(self, modified: datetime) -> None:
         ''' Set note time last modified (datetime object) '''
-        self.n_timestamp = n_timestamp
+        self.modified = modified
 
-    def __str__(self):
+    def add_content(self, new_content: Snip) -> None:
+        self.contents.append(new_content)
+
+    def __str__(self) -> str:
         ''' Note object __str__ '''
-        return f"{self.n_id}\n{self.n_name}\n{self.n_content}\n{self.n_timestamp}"
+        note_header = f"Note #{str(self.nid)} Title: {self.title} Modified: {str(self.modified)}\n"
+        output = note_header + "\n".join([str(snip) for snip in self.contents])
+        return f"{output}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         ''' Note object __repr__ '''
-        return f"{self.n_id}\n{self.n_name}\n{self.n_content}\n{self.n_timestamp}"
+        note_header = f"Note #{str(self.nid)} Title: {self.title} Modified: {str(self.modified)}\n"
+        output = note_header + "\n- ".join([str(snip) for snip in self.contents])
+        return f"{output}"
