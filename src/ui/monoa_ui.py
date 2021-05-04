@@ -23,7 +23,7 @@ from ui.monoa_note_viewer import MonoaNoteViewer
 
 # Globals
 MONOA_WINDOW_TITLE = "MoNoA"
-MONOA_RELEASE = "MoNoA Modular Notes App (Version 0.3.0 early bird alpha)"
+MONOA_RELEASE = "MoNoA - Modular Notes App - Version 0.4.0 (MVP)"
 
 class MonoaUI(QWidget):
     '''
