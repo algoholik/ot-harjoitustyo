@@ -1,4 +1,4 @@
-# Modular Notes App 0.3.0
+# Modular Notes App 0.4.0
 
 Eli tuttavallisemmin *MoNoA*, on modulaarinen muistiinpanosovellus, jossa käyttäjä hallinnoi
 muistiinpanojaan (ja ajatustyötään) koostamalla isompia kokonaisuuksia (notes) pienistä palasista
@@ -11,6 +11,7 @@ muistiinpanojaan (ja ajatustyötään) koostamalla isompia kokonaisuuksia (notes
 - Käyttäjä voi luoda uusia noteja
 - Käyttäjä voi muokata noten otsikkoa
 - Käyttäjä voi luoda uusia snippejä notejen sisään
+- Käyttäjä voi raahata snippejä haluaamansa järjestykseen noten sisällä (toimii osittain)
 - Käyttäjä voi selata noteja listalla
 - Käyttäjä voi etsiä noteja hakutoiminnolla
 - Kaikki tallentuu reaaliajassa sqlite3-tietokantaan
@@ -36,9 +37,9 @@ muistiinpanojaan (ja ajatustyötään) koostamalla isompia kokonaisuuksia (notes
 poetry install
 ```
 
-2. Suorita vaadittavat alustukset:
+2. Suorita vaadittavat alustustoimenpiteet:
 ```bash
-poetry run invoke build-demo
+poetry run invoke build
 ```
 
 3. Käynnistä MoNoA-sovellus:
