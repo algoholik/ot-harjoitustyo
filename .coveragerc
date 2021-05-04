@@ -2,4 +2,9 @@
 source  =   src/
 omit    =   laskarit/**,
             src/tests/**,
-            src/ui/**
+            src/ui/**,
+            src/database/**,
+            src/index.py,
+            src/demo.py,
+            src/config.py,
+            src/build.py

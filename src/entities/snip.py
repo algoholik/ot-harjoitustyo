@@ -56,8 +56,8 @@ class Snip:
 
     def __str__(self) -> str:
         ''' Snip object __str__ '''
-        return f"Snip #{str(self.sid)} ({self.sniptype}) ({str(self.modified)})\n{self.content}\n"
+        return f"Snip #{str(self.sid)} ({self.sniptype}) ({str(self.modified)}) {self.content}"
 
     def __repr__(self) -> str:
         ''' Snip object __repr__ '''
-        return f"Snip #{str(self.sid)} ({self.sniptype}) ({str(self.modified)})\n{self.content}\n"
+        return f"Snip #{str(self.sid)} ({self.sniptype}) ({str(self.modified)}) {self.content}"

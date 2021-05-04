@@ -17,5 +17,3 @@ class TestMonoaService(unittest.TestCase):
     def test_get_snip_by_id_returns_object_correctly(self):
         self.assertEqual(self.monoa_service.get_snip_by_id(1).get_id(), 1)
 
-    def test_get_latest_note_id_returns_id_as_int_correctly(self):
-        self.assertEqual(self.monoa_service.get_latest_note_id(), 1)

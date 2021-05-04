@@ -24,10 +24,10 @@ class TestSnip(unittest.TestCase):
         self.assertEqual(self.testsnip.get_modified(), self.timetest)
 
     def test_snip_prints_to_str_correctly(self):
-        self.assertEqual(str(self.testsnip), f"Snip #123 (0) ({self.timetest})\nSnip content\n")
+        self.assertEqual(str(self.testsnip), f"Snip #123 (0) ({self.timetest}) Snip content")
 
     def test_snip_repr_prints_correctly(self):
-        self.assertEqual(str(self.testsnip), f"Snip #123 (0) ({self.timetest})\nSnip content\n")
+        self.assertEqual(str(self.testsnip), f"Snip #123 (0) ({self.timetest}) Snip content")
 
     def test_snip_sets_id_correctly(self):
         self.testsnip.set_id(124)

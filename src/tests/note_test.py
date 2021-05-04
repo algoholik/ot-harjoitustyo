@@ -18,7 +18,8 @@ class TestNote(unittest.TestCase):
         self.assertEqual(self.testnote.get_title(), "Note title")
 
     def test_note_returns_contents_correctly(self):
-        self.assertEqual(self.testnote.get_contents(), "Note content")
+        comparison = f"[Snip #123 (0) ({self.timetest}) Snip content]"
+        self.assertEqual(str(self.testnote.get_contents()), comparison)
 
     def test_note_returns_modified_correctly(self):
         self.assertEqual(self.testnote.get_modified(), self.timetest)
@@ -26,13 +27,13 @@ class TestNote(unittest.TestCase):
     def test_note_prints_to_str_correctly(self):
         self.assertEqual(
             str(self.testnote), 
-            f"Note #33 Title: Note title ({self.timetest})\nSnip #123 (0) ({self.timetest})\nSnip content\n"
+            f"Note #33 Title: Note title ({self.timetest})\nSnip #123 (0) ({self.timetest}) Snip content"
         )
 
     def test_note_repr_prints_correctly(self):
         self.assertEqual(
             str(self.testnote), 
-            f"Note #33 Title: Note title ({self.timetest})\nSnip #123 (0) ({self.timetest})\nSnip content\n"
+            f"Note #33 Title: Note title ({self.timetest})\nSnip #123 (0) ({self.timetest}) Snip content"
         )
 
     def test_note_sets_id_correctly(self):
@@ -42,19 +43,6 @@ class TestNote(unittest.TestCase):
     def test_note_sets_title_correctly(self):
         self.testnote.set_title("Note title modified")
         self.assertEqual(self.testnote.get_title(), "Note title modified")
-
-    def test_note_sets_contents_correctly(self):
-        self.testnote.set_contents(Snip(234, 0, "Another snip content", self.timetest))
-        comparison = f"Snip #234 (0) ({self.timetest})\nAnother snip content\n"
-        self.assertEqual(self.testnote.get_contents(), comparison)
-
-    def test_note_adds_content_correctly(self):
-        self.testnote.add_content(Snip(234, 0, "Another snip content", self.timetest))
-        self.assertEqual(
-            self.testnote.get_contents(), 
-                f"Snip #234 (0) ({self.timetest})\nAnother snip content\n" + 
-                f"'Snip #234 (0) ({self.timetest})\nAnother snip content\n"
-        )
 
     def test_note_sets_modified_correctly(self):
         self.timetest2 = datetime.now()
