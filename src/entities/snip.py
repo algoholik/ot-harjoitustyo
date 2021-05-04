@@ -8,19 +8,19 @@ class Snip:
     Snip class
     -------------------------------------------------------------------------------------'''
     def __init__(
-        self, 
-        sid: int, 
-        sniptype: int, 
-        content: str, 
+        self,
+        sid: int,
+        sniptype: int,
+        content: str,
         modified: datetime
         ):
         '''---------------------------------------------------------------------------------
         Initialize Snip object with parameters:
         ---------------------------------------------------------------------------------'''
-        self.sid:       int         = sid          #int: unique snip id generated in database
-        self.sniptype:  int         = sniptype        #str: snip name
-        self.content:   str         = content     #str: snip content
-        self.modified:  datetime    = modified   #obj: datetime object of time last modified
+        self.sid:       int         = sid       #int: unique snip id generated in database
+        self.sniptype:  int         = sniptype  #int: snip type (defaults to 0 for now)
+        self.content:   str         = content   #str: snip content
+        self.modified:  datetime    = modified  #obj: datetime object of time last modified
 
     def get_id(self) -> int:
         ''' Return snippet id (int) '''
@@ -50,14 +50,14 @@ class Snip:
         ''' Set snip content (str) '''
         self.content = str(content)
 
-    def set_timestamp(self, modified: datetime) -> None:
+    def set_modified(self, modified: datetime) -> None:
         ''' Set snip time last modified (datetime object) '''
         self.modified = modified
 
     def __str__(self) -> str:
         ''' Snip object __str__ '''
-        return f"Snip #{str(self.sid)} Type: {self.sniptype} Modified: {str(self.modified)}\n{self.content}\n"
+        return f"Snip #{str(self.sid)} ({self.sniptype}) ({str(self.modified)})\n{self.content}\n"
 
     def __repr__(self) -> str:
         ''' Snip object __repr__ '''
-        return f"Snip #{str(self.sid)} Type: {self.sniptype} Modified: {str(self.modified)}\n{self.content}\n"
+        return f"Snip #{str(self.sid)} ({self.sniptype}) ({str(self.modified)})\n{self.content}\n"

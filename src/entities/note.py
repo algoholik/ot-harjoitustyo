@@ -9,10 +9,10 @@ class Note:
     Note class
     -------------------------------------------------------------------------------------'''
     def __init__(
-        self, 
-        nid: int, 
-        title: str, 
-        contents: list, 
+        self,
+        nid: int,
+        title: str,
+        contents: list,
         modified: datetime
         ):
         '''---------------------------------------------------------------------------------
@@ -56,16 +56,17 @@ class Note:
         self.modified = modified
 
     def add_content(self, new_content: Snip) -> None:
+        ''' Add snip object to the note object snip list. '''
         self.contents.append(new_content)
 
     def __str__(self) -> str:
         ''' Note object __str__ '''
-        note_header = f"Note #{str(self.nid)} Title: {self.title} Modified: {str(self.modified)}\n"
+        note_header = f"Note #{str(self.nid)} Title: {self.title} ({str(self.modified)})\n"
         output = note_header + "\n".join([str(snip) for snip in self.contents])
         return f"{output}"
 
     def __repr__(self) -> str:
         ''' Note object __repr__ '''
-        note_header = f"Note #{str(self.nid)} Title: {self.title} Modified: {str(self.modified)}\n"
+        note_header = f"Note #{str(self.nid)} Title: {self.title} ({str(self.modified)})\n"
         output = note_header + "\n- ".join([str(snip) for snip in self.contents])
         return f"{output}"
