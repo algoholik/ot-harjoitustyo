@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import (
 from services.monoa_service import monoa_service
 from entities.note import Note
 from config import SETTINGS_FILE_PATH
+from ui.monoa_text_edit import MonoaTextEdit
 import utils
 
 from ui.monoa_list_item import MonoaListItem
