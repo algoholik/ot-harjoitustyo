@@ -4,13 +4,13 @@
 
 ### Testikattavuus
 
-UI-kerrosta lukuunottamatta pytestin haarautumakattavuus on 61 %.
+UI-kerrosta lukuunottamatta testien haarautumakattavuus on 61 %. Testeissä keskityttiin lähinnä sovelluksen keskeisten Note- ja Snip -luokkien toiminnallisuuksiin.
 
 ![Testikattavuus](./kuvat/pytest_coverage.png)
 
 ## Järjestelmätestaus
 
-Sovellusta on järjestelmätestattu manuaalisesti käyttöliittymää läpikäymällä ja toisintamalla sovelluksen käyttöohjeen ohjeita.
+Sovellusta on järjestelmätestattu manuaalisesti käyttöliittymää läpikäymällä ja toisintamalla sovelluksen käyttöohjeen ohjeita, sekä Mac OS- että Linux-käyttöjärjestelmillä.
 
 [Vaatimusmäärittelydokumentin](https://github.com/algoholik/modularnotes/blob/main/dokumentaatio/vaatimusmaarittely.md) valmiiksi merkatut kohdat on testattu läpi.
 
