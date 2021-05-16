@@ -98,7 +98,6 @@ class MonoaBrowser(QWidget):
                 item.activate()
 
     def _signal_handler_note_selected(self, note: Note) -> None:
-        print("new note selected")
         self.signal_note_selected.emit(note)
         for item in self.notes_list_items:
             if item.get_note_id() != note.get_id():

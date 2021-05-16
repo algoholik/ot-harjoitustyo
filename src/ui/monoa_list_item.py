@@ -75,7 +75,7 @@ class MonoaListItem(QWidget):
         ''' Update note list item labels. '''
         note_title = self.note.get_title()
         note_contents = [snip.get_content() for snip in self.note.get_contents() if snip]
-        note_snips_merged = " ".join(note_contents).replace("\n", " ").strip()[:90]
+        note_snips_merged = " ".join(note_contents).replace("\n", " ").strip()[:80]
         if len(note_title) > 0:
             self.note_title.setText(f"{note_title}")
         else:

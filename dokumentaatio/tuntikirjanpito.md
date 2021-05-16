@@ -23,4 +23,8 @@
 |  2.5. |       5 | notet sisältämään ja käsittelemään snipit objekteina |
 |  3.5. |       8 | käyttöliittymän uudelleensuunnittelu selkeämmäksi ja uusien toimintojen lisäys |
 |  4.5. |       6 | docstring- ja pytest-kattavuuden kasvattamista ja koodin refaktorointia, käyttöohjeet |
-|  Yht. |   108.5 | | 
+| 13.5. |     2.5 | export-ominaisuuden suunnittelua |
+| 14.5. |       5 | buginmetsästystä ja koodin siistimistä sekä docstring-dokumentointia |
+| 15.5. |       6 | note-listauksen dynaaminen päivitys -ominaisuuden korjailua |
+| 16.5. |       9 | export-ominaisuuden lisäys, bugikorjauksia, refaktorointia, dokumentaation viimeistelyä |
+|  Yht. |     131 | |

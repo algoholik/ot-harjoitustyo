@@ -1,25 +1,25 @@
-# Modular Notes App 0.4.0
+# Modular Notes App 0.5.0
 
 Eli tuttavallisemmin *MoNoA*, on modulaarinen muistiinpanosovellus, jossa käyttäjä hallinnoi
 muistiinpanojaan (ja ajatustyötään) koostamalla isompia kokonaisuuksia (notes) pienistä palasista
 (snips).
 
 
-## Tilannekatsaus ti 4.5.2021
+## Tilannekatsaus su 16.5.2021
 
 - Ohjelman voi onnistuneesti suorittaa kunhan on ensin tehnyt tarvittavat alustustoimenpiteet
 - Käyttäjä voi luoda uusia noteja
 - Käyttäjä voi muokata noten otsikkoa
-- Käyttäjä voi luoda uusia snippejä notejen sisään
-- Käyttäjä voi raahata snippejä haluaamansa järjestykseen noten sisällä (toimii osittain)
+- Käyttäjä voi luoda uusia snippejä noten sisään
 - Käyttäjä voi selata noteja listalla
 - Käyttäjä voi etsiä noteja hakutoiminnolla
-- Kaikki tallentuu reaaliajassa sqlite3-tietokantaan
+- Käyttäjä voi exportata noten sisällön tekstitiedostoksi
+- Notet ja snipit tallentuvat reaaliajassa sqlite3-tietokantaan
 
 
 ## Uusin Release
 
-- [Release Viikko 6](https://github.com/algoholik/modularnotes/releases/tag/viikko6)
+- [Release Viikko 7](https://github.com/algoholik/modularnotes/releases/tag/viikko7)
 
 
 ## Dokumentaatio
@@ -59,7 +59,7 @@ poetry run invoke start
 ## Testaus
 
 
-### Testit 
+### Testit
 Testit saa ajettua komennolla:
 ```bash
 poetry run invoke test
@@ -80,7 +80,7 @@ Raportti generoituu projektin juurihakemistoon kansion _htmlcov_ alle.
 ## Linting
 
 
-### Pylint 
+### Pylint
 Linttaa komennolla:
 ```bash
 poetry run invoke lint
